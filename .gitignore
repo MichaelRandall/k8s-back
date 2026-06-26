@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Lock files (keep package-lock.json, but ignore yarn.lock if not using yarn)
+yarn.lock
+
+# Runtime
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage / testing
+coverage/
+.nyc_output/
+
+# Environment variables (never commit secrets)
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
