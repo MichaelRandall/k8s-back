@@ -10,7 +10,8 @@ on:
 
 env:
   DOCKER_HUB_USERNAME: m_ran66
-  IMAGE_NAME: k8s-backend
+  IMAGE_NAME: k8s-test
+  TAG_PREFIX: backend
 
 jobs:
   build-and-push:
@@ -38,11 +39,9 @@ jobs:
         with:
           images: docker.io/${{ env.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=branch
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=sha,prefix={{branch}}-
-            type=raw,value=latest,enable={{is_default_branch}}
+            type=semver,pattern={{version}},prefix=${{ env.TAG_PREFIX }}-
+            type=sha,prefix=${{ env.TAG_PREFIX }}-{{branch}}-
+            type=raw,value=${{ env.TAG_PREFIX }}-latest,enable={{is_default_branch}}
 
       - name: Build and push image
         uses: docker/build-push-action@v5
@@ -51,8 +50,8 @@ jobs:
           push: ${{ github.event_name == 'push' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=docker.io/${{ env.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}:buildcache
-          cache-to: type=registry,ref=docker.io/${{ env.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}:buildcache,mode=max
+          cache-from: type=registry,ref=docker.io/${{ env.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG_PREFIX }}-buildcache
+          cache-to: type=registry,ref=docker.io/${{ env.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG_PREFIX }}-buildcache,mode=max
 
       - name: Image digest
         run: |
